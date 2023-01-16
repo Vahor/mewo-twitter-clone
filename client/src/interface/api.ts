@@ -1,3 +1,5 @@
+import {User} from "./user";
+
 export type FeedResponse = Tweet[]
 
 export type FeedResponseRaw = {
@@ -8,11 +10,6 @@ export type FeedResponseRaw = {
     createdAt: string;
 }[]
 
-export type User = {
-    name: string;
-    username: string;
-    profilePicture: string;
-}
 
 export type Tweet = {
     id: number;

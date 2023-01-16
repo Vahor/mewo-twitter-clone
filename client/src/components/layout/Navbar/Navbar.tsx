@@ -8,6 +8,7 @@ import {
     IconUser
 } from "@tabler/icons";
 import {Link, useHistory} from "react-router-dom";
+import {useAuth} from "../../../context/AuthContext";
 
 const navigation = [
     {
@@ -23,22 +24,26 @@ const navigation = [
     {
         label: 'Notifications',
         icon: IconBell,
-        href: '#'
+        href: '#',
+        protected: true,
     },
     {
         label: 'Messages',
         icon: IconMail,
-        href: '#'
+        href: '#',
+        protected: true,
     },
     {
         label: 'Bookmarks',
         icon: IconBookmark,
-        href: '#'
+        href: '#',
+        protected: true,
     },
     {
         label: 'Profile',
         icon: IconUser,
-        href: '/profile'
+        href: '/profile',
+        protected: true,
     }
 ]
 
@@ -63,18 +68,24 @@ export const Navbar = () => {
 const NavLinks = () => {
     const history = useHistory()
     const location = history.location.pathname;
+
+    const {user} = useAuth();
+
     return (
         <nav className='flex gap-2 flex-col mt-4'>
             {navigation.map((item) => {
+                if (!user && item.protected) {
+                    return null
+                }
                 const Icon = item.icon;
                 const active = location === item.href;
                 return (
-                    <Link to={item.href}>
+                    <Link to={item.href} key={item.label}>
                         <div
                             className={`flex gap-2 px-3 py-2 transition-color duration-100 hover:bg-gray-100 rounded-md ${active ? 'text-blue-500' : ''}`}>
 
                             <div className="w-6 lg:w-8">
-                                <Icon />
+                                <Icon/>
                             </div>
 
                             <span className='text-sm md:text-base'>{item.label}</span>
@@ -87,6 +98,10 @@ const NavLinks = () => {
 }
 
 const NewTweetButton = () => {
+    const {user} = useAuth();
+    if (!user) {
+        return null;
+    }
     return (
         <button className='px-3 py-2 rounded-xl bg-blue-400 text-white w-full mt-4'>
             Tweet
@@ -95,13 +110,26 @@ const NewTweetButton = () => {
 }
 
 const User = () => {
+    const {user, logout} = useAuth();
+
     return (
-        <div className='flex items-center gap-2 pb-4'>
-            <img className='h-8 w-8 rounded-full bg-red-500'/>
-            <div className="flex flex-col">
-                <p className=''>UserName</p>
-                <p className='font-normal text-xs text-gray-300'>@yey</p>
-            </div>
+        <div className='pb-4 w-full flex items-center'>
+            {!user && (
+                <Link to='/login' className='px-3 py-2 rounded-xl bg-blue-400 text-white w-full mt-4 text-center'>
+                    Login
+                </Link>
+            )}
+            {user && (
+                <div onClick={logout}
+                     className='flex items-center gap-2 transition-color duration-100 hover:bg-gray-100 rounded-md w-full cursor-pointer'>
+                    <img className='h-8 w-8 rounded-full' src={user.profilePicture}/>
+                    <div className="flex flex-col">
+                        <p className=''>{user.username}</p>
+                        <p className='font-normal text-xs text-gray-300'>@{user.name}</p>
+                    </div>
+                </div>
+
+            )}
         </div>
     )
 }
