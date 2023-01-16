@@ -10,6 +10,11 @@ import {Navbar} from "./components/layout/Navbar/Navbar";
 import {Sidebar} from "./components/layout/Sidebar";
 import {AuthContextProvider} from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import ProfilePage from "./pages/ProfilePage";
+
+dayjs.extend(relativeTime)
 
 function App() {
 
@@ -27,6 +32,9 @@ function App() {
                             </Route>
                             <Route path="/login" exact>
                                 <LoginPage/>
+                            </Route>
+                            <Route path="/profile" exact>
+                                <ProfilePage/>
                             </Route>
                             <Route path="/user/:user">
                                 <UserProfilePage/>

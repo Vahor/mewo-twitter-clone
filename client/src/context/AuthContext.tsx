@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
 import jwtDecode from 'jwt-decode'
 import type {User} from "../interface/user";
+import {POST} from "../api/api";
 
 type AuthContextProps = {
     user: User | null
@@ -27,8 +28,13 @@ const login = async ({
                          password,
                          username
                      }: { password: string, username: string }): Promise<AuthContextProps['user']> => {
-    const response = {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJ0ZXN0IiwidXNlcm5hbWUiOiJ0ZXN0IiwicHJvZmlsZVBpY3R1cmUiOiJodHRwczovL2Nsb3VkZmxhcmUtaXBmcy5jb20vaXBmcy9RbWQzVzVEdWhnSGlyTEhHVml4aTZWNzZMaENrWlV6NnBuRnQ1QUpCaXl2SHllL2F2YXRhci8xMTQ4LmpwZyJ9LCJpYXQiOjE2NzM4NzgyODV9.qanIAgPv4BTNedHUKMfZT2L6bslcvgVGCSncQ8HnoHE"
+    const response = await POST<{ token: string, message?: string }>('/signin', {
+        name: username,
+        password
+    })
+
+    if (response.message) {
+        return null;
     }
 
     const user = parseToken(response.token)

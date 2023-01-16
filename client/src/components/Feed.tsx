@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {FeedResponse} from "../interface/api";
 import {getFeed} from "../api/api";
-import Post from "./Post";
+import FeedPost from "./Post";
 
 const Feed = () => {
 
@@ -17,7 +17,7 @@ const Feed = () => {
         <div className='container mx-auto'>
             {feed === undefined && <div>loading</div>}
             <div className="flex flex-col gap-3">
-                {feed?.map(post => <Post post={post} key={post.id}/>)}
+                {feed?.map(post => <FeedPost post={post} key={post.id}/>)}
             </div>
 
         </div>
